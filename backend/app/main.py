@@ -8,6 +8,7 @@ from .database import SessionLocal, engine
 from . import models
 from fastapi.middleware.cors import CORSMiddleware
 
+
 app = FastAPI()
 
 app.add_middleware(
@@ -33,6 +34,7 @@ def get_db():
 
 @app.post("/predict")
 def predict(data: PatientData, db: Session = Depends(get_db)):
+
 
     # Feature Engineering
     age_years = data.age / 365
@@ -95,3 +97,8 @@ def predict(data: PatientData, db: Session = Depends(get_db)):
         "risk_probability": float(probability),
         "risk_category": category
     }
+
+@app.get("/history")
+def get_history(db: Session = Depends(get_db)):
+    records = db.query(models.Prediction).all()
+    return records
