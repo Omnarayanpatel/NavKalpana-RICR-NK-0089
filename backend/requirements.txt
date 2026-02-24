@@ -7,3 +7,4 @@ xgboost
 joblib
 psycopg2-binary
 sqlalchemy
+lightgbm

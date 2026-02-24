@@ -6,8 +6,17 @@ from .schemas import PatientData
 from .model_loader import load_model
 from .database import SessionLocal, engine
 from . import models
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # frontend url
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create DB tables
 models.Base.metadata.create_all(bind=engine)
@@ -85,6 +94,8 @@ def predict(data: PatientData, db: Session = Depends(get_db)):
     db.add(db_record)
     db.commit()
     db.refresh(db_record)
+
+    
 
     return {
         "risk_probability": float(probability),
